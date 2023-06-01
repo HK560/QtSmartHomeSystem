@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>virtual_keyboard.qml</file>
+    </qresource>
+</RCC>

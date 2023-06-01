@@ -1,0 +1,3 @@
+# NOTE: This file exists purely for qmlscene compatibility.
+# It's not used by Qt Quick Ultralite at any stage.
+singleton Configuration 1.0 Configuration.qml

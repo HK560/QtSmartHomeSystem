@@ -1,0 +1,1288 @@
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+
+Item {
+    id: item1
+    width: 1024
+    height: 500
+    visible: true
+    property alias unbannedListVieww: unbannedListView
+    property int nowIndex
+    property int audioListIndex
+    property int choosenUserIndex: 0
+    Rectangle {
+        id: rectangle
+        width: 312
+        color: "#ececec"
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.leftMargin: 0
+        anchors.bottomMargin: 0
+        anchors.topMargin: 0
+
+        ListView {
+            id: listView
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            // anchors.bottom: parent.bottom
+
+            anchors.fill: parent
+            anchors.rightMargin: 20
+            anchors.leftMargin: 20
+            // anchors.bottomMargin: 20
+            anchors.topMargin: 20
+
+            model: ListModel {
+                id: wifiListModel
+                ListElement {
+                    settingName: "当前用户设置"
+                }
+
+                ListElement {
+                    settingName: "通用设置"
+                }
+
+                ListElement {
+                    settingName: "权限设置"
+                }
+
+                ListElement {
+                    settingName: "网络设置"
+                }
+                ListElement {
+                    settingName: "音频设置"
+                }
+                ListElement {
+                    settingName: "系统"
+                }
+            }
+            delegate: wifiDelegate
+            highlight:Rectangle {
+                id: highlight
+                color: "#40a7e3"
+                radius: 30
+                border.width: 0
+
+                ColorAnimation {
+                    id: colorAnimation
+                    target:highlight
+                    from:"#00ffffff"
+                    to: "#40a7e3"
+                }
+            }
+            focus: true;
+        }
+        Component {
+            id: wifiDelegate
+            Item {
+                id: wrapper
+                width: listView.width
+                height: 50
+
+                // 实现了鼠标点选高亮的效果
+                MouseArea {
+                    anchors.fill: parent;
+                    onClicked: {
+                        wrapper.ListView.view.currentIndex = index;
+                        nowIndex = index;
+                    }
+                }
+
+                // 内嵌三个Text对象，水平布局
+                Row {
+                    id: row
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.rightMargin: 0
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: 10
+
+
+                    Rectangle {
+                        id:wifinameRectangle
+                        width: parent.width/2
+                        anchors.left: parent.left
+                        anchors.leftMargin: 10
+                        MLabel2 {
+                            labelText: settingName
+                            labelHorizontalAlignment: Text.AlignLeft
+                            anchors.fill: parent ; anchors.leftMargin: 20;labelColor: "#1c1c1c"}
+                        // Text {
+                        //     id: wifinameid
+                        //     text: wifiname
+                        //     anchors.fill: parent
+                        //     horizontalAlignment: Text.AlignHCenter
+                        //     verticalAlignment: Text.AlignVCenter
+                        // }
+                    }
+                    //                    Rectangle {
+                    //                        id:wifilevelRectangle
+
+                    //                        anchors.left: wifinameRectangle.right
+                    //                        anchors.right: parent.right
+                    //                        anchors.rightMargin: -10
+                    //                        anchors.leftMargin: 0
+                    //                        MLabel2 {
+                    //                            id: wifilevelid
+                    //                            labelText: wifilevel
+                    //                            anchors.fill: parent
+                    //                            labelHorizontalAlignment: Text.AlignHCenter
+
+                    //                        }
+                    //                    }
+
+                }
+            }
+        }
+    }
+
+    Rectangle {
+        id: userSetting
+        visible: nowIndex == 0 ? true : false
+        color: "#ffffff"
+        anchors.left: rectangle.right
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.topMargin: 0
+        anchors.bottomMargin: 0
+        anchors.rightMargin: 0
+        anchors.leftMargin: 0
+
+
+        Flickable {
+            id: flickable
+            interactive:true
+            anchors.fill: parent
+
+            contentWidth: parent.width
+            contentHeight: rectangle2.height
+            Rectangle {
+                id: rectangle2
+                x: 0
+                y: 0
+                width: 712
+                height: 853
+                color: "#00070303"
+
+                Column {
+                    id: column
+                    anchors.fill: parent
+
+                    Item {
+                        id: item2
+                        height: 100
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.rightMargin: 0
+                        anchors.leftMargin: 0
+
+                        MLabelBlack {
+                            id: mLabelBlack
+                            x: 126
+                            width: 135
+                            height: 65
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.verticalCenterOffset: 1
+                            labelText: "用户名"
+                        }
+
+                        MLineEdit1 {
+                            id: userNameEdit
+                            x: 420
+                            y: 25
+                            textInputText: ""
+                        }
+                    }
+
+                    Item {
+                        id: item3
+                        height: 100
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.leftMargin: 0
+                        MLabelBlack {
+                            x: 126
+                            width: 135
+                            height: 65
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.verticalCenterOffset: 1
+                            labelText: "密码"
+                        }
+
+                        MLineEdit1 {
+                            id: userPasswordEdit
+
+                            x: 420
+                            y: 25
+                            textInputText: ""
+                        }
+                        anchors.rightMargin: 0
+                    }
+                }
+            }
+            ScrollBar.vertical: ScrollBar {
+                width: 10
+                anchors.right: parent.right
+                anchors.rightMargin: 0 // adjust the anchor as suggested by derM
+                policy: ScrollBar.AlwaysOn
+            }
+        }
+
+        MbuttonBlue {
+            id: mbuttonBlue
+            x: 281
+            y: 442
+            text: "应用"
+            onClicked: {
+                qmlCtrl.updateNowUserName(userNameEdit.textInputText);
+                qmlCtrl.updateNowUserPwd(userPasswordEdit.textInputText);
+
+            }
+        }
+        onVisibleChanged: {
+            // userNameEdit.textInputText = qmlCtrl.getNowUserName();
+            // userPasswordEdit.textInputText = qmlCtrl.getNowUserPwd();
+        }
+
+    }
+
+    Rectangle {
+        id: generalSetting
+        x: -1
+        y: -1
+//                    visible: true
+        visible: nowIndex == 1 ? true : false
+        color: "#ffffff"
+        anchors.left: rectangle.right
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 0
+        anchors.leftMargin: 0
+        anchors.topMargin: 0
+        anchors.rightMargin: 0
+        Flickable {
+            anchors.fill: parent
+            contentWidth: parent.width
+            interactive: true
+            contentHeight: rectangle2.height
+            Rectangle {
+                x: 0
+                y: 0
+                width: 712
+                height: 853
+                color: "#00070303"
+                Column {
+                    anchors.fill: parent
+                    Item {
+                        height: 100
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.leftMargin: 0
+                        anchors.rightMargin: 0
+                        MLabelBlack {
+                            id:labelUdp
+                            x: 126
+                            width: 135
+                            height: 65
+                            anchors.verticalCenter: parent.verticalCenter
+                            labelText: "UDP广播周期"
+                            anchors.verticalCenterOffset: 1
+                        }
+                        MSpinBox {
+                            id: udpSendCycleTime
+                            x: 420
+                            y: 25
+                            value: qmlCtrl.udpSendCycleTime
+                        }
+                    }
+
+                    Item {
+                        height: 100
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.leftMargin: 0
+                        anchors.rightMargin: 0
+                        MLabelBlack {
+                            x: 126
+                            width: 135
+                            height: 65
+                            anchors.verticalCenter: parent.verticalCenter
+                            labelText: "无操作锁屏时间(s)"
+                            anchors.verticalCenterOffset: 1
+                        }
+
+                        MSpinBox {
+                            id: screenLockTimeout
+                            x: 420
+                            y: 25
+                            value: qmlCtrl.lockScreenTimeout
+                        }
+                    }
+                    Item {
+                        id: item4
+                        height: 100
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.leftMargin: 0
+                        anchors.rightMargin: 0
+
+
+
+                        ListModel {
+                            id: piccModel
+                            ListElement {
+                                fileName:"shit"
+                            }
+                        }
+
+                        MLabelBlack {
+                            id: mLabelBlack1
+                            width: 169
+                            height: 50
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.left: parent.left
+                            anchors.leftMargin: 100
+                            labelText: "锁屏壁纸"
+                        }
+
+                        MComboxBox {
+                            id: combo
+                            width: 200
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.left: mLabelBlack1.right
+                            anchors.leftMargin: 120
+                            currentIndex: qmlCtrl.getImageIndexfromName()
+                            model:qmlCtrl.getImagesList()
+                            //                                        model:piccModel
+                            //                                        placeholderText: "Select an image file..."
+                        }
+
+
+
+                    }
+
+                    Item {
+                        id: item6
+                        height: 100
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.rightMargin: 0
+                        ListModel {
+                            ListElement {
+                                fileName: "shit"
+                            }
+                        }
+
+                        MLineEdit1 {
+                            id: mLineEdit1
+                            width: 283
+                            height: 50
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.left: chatgptCommandLabel.right
+                            textInputText: ""
+                            anchors.verticalCenterOffset: 0
+                            anchors.leftMargin: 75
+                            STTVbutton{
+                                id:sstVbuttonCommand
+                                anchors.right: parent.right
+                                anchors.top: parent.top
+                                anchors.bottom: parent.bottom
+                                anchors.bottomMargin: 10
+                                anchors.topMargin: 10
+                                anchors.rightMargin: 0
+                                flag:1
+                            }
+                            Connections{
+                                target: sstVbuttonCommand
+                                function onGetResult(message){
+                                    mLineEdit1.textInputText= message
+                                }
+                            }
+
+                        }
+
+                        MLabelBlack {
+                            id:chatgptCommandLabel
+                            width: 200
+                            height: 50
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.left: parent.left
+                            anchors.leftMargin: 80
+                            labelText: "ChatGPT前置命令"
+
+                        }
+
+
+                        anchors.leftMargin: 0
+                    }
+                }
+            }
+            ScrollBar.vertical: ScrollBar {
+                width: 10
+                anchors.right: parent.right
+                anchors.rightMargin: 0
+                policy: ScrollBar.AlwaysOn
+            }
+        }
+
+        MbuttonBlue {
+            x: 281
+            y: 442
+            text: "应用"
+            onClicked: {
+                qmlCtrl.udpSendCycleTime = udpSendCycleTime.value;
+                qmlCtrl.lockScreenTimeout = screenLockTimeout.value;
+                qmlCtrl.setImageNameFromIndex(combo.currentIndex);
+            }
+        }
+    }
+
+    Rectangle {
+        id: roleSetting
+        x: -5
+        y: -5
+        //                    visible: true
+        visible: nowIndex == 2 ? true : false
+
+        color: "#ffffff"
+        anchors.left: rectangle.right
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.leftMargin: 0
+        anchors.bottomMargin: 0
+        anchors.topMargin: 0
+        anchors.rightMargin: 0
+        Flickable {
+            anchors.fill: parent
+            contentWidth: parent.width
+            interactive: true
+            contentHeight: rectangle2.height
+            Rectangle {
+                id:roleSetting2
+                x: 0
+                y: 0
+                width: 712
+                height: 853
+                color: "#00070303"
+                property int choosenUserIndex
+
+                MLabelBlack {
+                    id: mLabelBlack3
+                    width: 100
+                    height: 20
+                    anchors.top: parent.top
+                    labelText: "选择用户进行设置"
+                    anchors.topMargin: 20
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
+
+                Rectangle {
+                    id: rectangleList1
+                    y: 98
+                    width: 206
+                    height: 300
+                    color: "#36464646"
+                    radius: 30
+                    anchors.top: mLabelBlack3.bottom
+                    anchors.horizontalCenterOffset: -239
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.topMargin: 70
+                    ListView {
+                        id: userlistView
+                        height: 297
+                        clip: true
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        //                            anchors.top: itemAudioDevice.bottom
+                        anchors.rightMargin: 20
+                        anchors.leftMargin: 20
+                        anchors.topMargin: 20
+                        //                            model: ["shit", "fk"]
+                        model:qmlCtrl.getUserNameList()
+                        delegate: userDelegate
+                        focus: true;
+                    }
+
+                }
+
+                Rectangle {
+                    id: rectangleList2
+                    x: -1
+                    y: 97
+                    width: 206
+                    height: 300
+                    color: "#36464646"
+                    radius: 30
+                    anchors.top: mLabelBlack3.bottom
+                    anchors.topMargin: 70
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    ListView {
+                        id :bannedListView
+                        height: 297
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        //                                anchors.top: itemAudioDevice.bottom
+                        anchors.topMargin: 20
+                        anchors.rightMargin: 20
+                        clip: true
+                        delegate: bannedDelegate
+                        model: qmlCtrl.getUserBannedDeviceList(choosenUserIndex)
+                        anchors.leftMargin: 20
+                        focus: true
+                    }
+
+
+                    anchors.horizontalCenterOffset: 0
+                }
+
+                Rectangle {
+                    id: rectangleList3
+                    x: -5
+                    y: 93
+                    width: 206
+                    height: 300
+                    color: "#36464646"
+                    radius: 30
+                    anchors.top: mLabelBlack3.bottom
+                    anchors.topMargin: 70
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    ListView {
+                        id:unbannedListView
+                        height: 297
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        //                                anchors.top: itemAudioDevice.bottom
+                        anchors.topMargin: 20
+                        anchors.rightMargin: 20
+                        clip: true
+                        delegate: unbannedDelegate
+                        model: qmlCtrl.getUserUnbannedDeviceList(choosenUserIndex)
+                        anchors.leftMargin: 20
+                        focus: true
+                    }
+
+
+                    anchors.horizontalCenterOffset: 232
+                }
+
+            }
+
+
+
+
+            Component {
+                id: userDelegate
+                Item {
+                    id: wrapperUser
+                    width: userlistView.width
+                    height: 50
+                    MouseArea {
+                        anchors.fill: parent;
+                        onClicked: {
+                            console.log("nowuserindex%d",index)
+                            wrapperUser.ListView.view.currentIndex = index;
+                            //                        qmlCtrl.setAudioDevice(index)
+                            choosenUserIndex = index
+                            bannedListView.model = qmlCtrl.getUserBannedDeviceList(choosenUserIndex)
+                            unbannedListView.model = qmlCtrl.getUserUnbannedDeviceList(choosenUserIndex)
+
+                            //                                        console.log(userlistView.model.at(index).modelData)
+                        }
+                    }
+                    Row {
+                        id: row
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.rightMargin: 0
+                        anchors.verticalCenter: parent.verticalCenter
+                        spacing: 10
+                        Rectangle {
+                            id:userRectangle
+                            width: parent.width/2
+                            anchors.left: parent.left
+                            anchors.leftMargin: 10
+                            MLabel2 {
+                                labelText: modelData
+                                labelHorizontalAlignment: Text.AlignLeft
+                                anchors.fill: parent ; anchors.leftMargin: 20;labelColor: index === userlistView.currentIndex ? "blue" : "white"}
+                        }
+                    }
+                }
+            }
+
+            Component {
+                id: bannedDelegate
+                Item {
+                    id: wrapperUser1
+                    width: bannedListView.width
+                    height: 50
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            wrapperUser1.ListView.view.currentIndex = index;
+                            qmlCtrl.removeBannedDevice(choosenUserIndex, index);
+                            unbannedListVieww.model = qmlCtrl.getUserUnbannedDeviceList(choosenUserIndex)
+                            bannedListView.model = qmlCtrl.getUserBannedDeviceList(choosenUserIndex);
+                            //                                                roleSetting2.rectangleList3.unbannedListView.model = qmlCtrl.getUserUnbannedDeviceList(choosenUserIndex)
+
+                        }
+                    }
+
+                    Row {
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        spacing: 10
+                        Rectangle {
+                            width: parent.width/2
+                            anchors.left: parent.left
+                            MLabel2 {
+                                anchors.fill: parent
+                                labelText: modelData
+                                labelColor: index === bannedListView.currentIndex ? "blue" : "white"
+                                anchors.leftMargin: 20
+                                labelHorizontalAlignment: Text.AlignLeft
+                            }
+                            anchors.leftMargin: 10
+                        }
+                        anchors.rightMargin: 0
+                    }
+                }
+            }
+
+            Component {
+                id:unbannedDelegate
+                Item {
+                    id:wrapperUser2
+                    width: unbannedListView.width
+                    height: 50
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            wrapperUser2.ListView.view.currentIndex = index;
+                            //                        qmlCtrl.setAudioDevice(index)
+                            audioListIndex = index
+                            qmlCtrl.addBannedDevice(choosenUserIndex, index)
+                            bannedListView.model = qmlCtrl.getUserBannedDeviceList(choosenUserIndex)
+                            unbannedListView.model = qmlCtrl.getUserUnbannedDeviceList(choosenUserIndex)
+
+                        }
+                    }
+
+                    Row {
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        spacing: 10
+                        Rectangle {
+                            width: parent.width/2
+                            anchors.left: parent.left
+                            MLabel2 {
+                                anchors.fill: parent
+                                labelText: modelData
+                                labelColor: index === unbannedListView.currentIndex ? "blue" : "white"
+                                anchors.leftMargin: 20
+                                labelHorizontalAlignment: Text.AlignLeft
+                            }
+                            anchors.leftMargin: 10
+                        }
+                        anchors.rightMargin: 0
+                    }
+                }
+            }
+            ScrollBar.vertical: ScrollBar {
+                width: 10
+                anchors.right: parent.right
+                anchors.rightMargin: 0
+                policy: ScrollBar.AlwaysOn
+            }
+        }
+
+        MbuttonBlue {
+            x: 281
+            y: 442
+            text: "应用"
+            onClicked: {
+                qmlCtrl.updateBannedDeviceToDB()
+            }
+        }
+
+        Rectangle {
+            id: banNormalUser
+            //                                visible: false
+            visible: ! qmlCtrl.getNowUserRoleIsAdmin()
+
+            color: "#ffffff"
+            anchors.fill: parent
+
+            MLabelBlack {
+                id: mLabelBlack2
+                width: 134
+                height: 66
+                visible: true
+                anchors.verticalCenter: parent.verticalCenter
+                labelText: "非管理员，无法操作"
+                anchors.horizontalCenter: parent.horizontalCenter
+            }
+
+            MouseArea {
+                id: mouseArea
+                anchors.fill: parent
+            }
+        }
+    }
+
+    Connections {
+        target: qmlCtrl;
+        function onProxyVaildChanged(status)
+        {
+            console.log("qml get proxyStatus");
+            if (status == true)
+            {
+            }else {
+                // connectStateLabel.labelText = "代理连接失败"
+                usingProxySw.checked = false
+            }
+        }
+    }
+
+    Rectangle {
+        id: networkSetting
+        x: 1024
+        y: 0
+        visible: nowIndex == 3 ? true : false
+        color: "#ffffff"
+        anchors.left: rectangle.right
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 0
+        Flickable {
+            anchors.fill: parent
+            interactive: true
+            contentWidth: parent.width
+            ScrollBar.vertical: ScrollBar {
+                width: 10
+                anchors.right: parent.right
+                anchors.rightMargin: 0
+                policy: ScrollBar.AlwaysOn
+            }
+            contentHeight: rectangle2.height
+            Rectangle {
+                x: 0
+                y: 0
+                width: 712
+                height: 853
+                color: "#00070303"
+                Column {
+                    anchors.fill: parent
+                    Item {
+                        height: 100
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        MLabelBlack {
+                            x: 126
+                            width: 135
+                            height: 65
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.verticalCenterOffset: 1
+                            labelText: "使用代理"
+                        }
+
+                        PowerSwitch {
+                            id: usingProxySw
+                            x: 420
+                            y: 25
+                            width: 99
+                            height: 58
+                            checked: qmlCtrl.enableProxy
+                        }
+                        anchors.leftMargin: 0
+                        anchors.rightMargin: 0
+                    }
+
+                    Item {
+                        height: 100
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        MLabelBlack {
+                            x: 126
+                            width: 135
+                            height: 65
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.verticalCenterOffset: 1
+                            labelText: "代理服务器地址(IPv4)"
+                        }
+
+                        MLineEdit1 {
+                            id: proxyServerAddr
+                            textInputText: qmlCtrl.proxyServerAddr
+                            readOnly:!usingProxySw.checked
+                            x: 420
+                            y: 25
+                            textInput.validator: RegExpValidator { regExp: /^((25[0-5]|2[0-4]\d|[01]?\d\d?)\.){3}(25[0-5]|2[0-4]\d|[01]?\d\d?)$/ }
+                        }
+                        anchors.leftMargin: 0
+                        anchors.rightMargin: 0
+                    }
+                    Item {
+                        height: 100
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        MLabelBlack {
+                            x: 126
+                            width: 135
+                            height: 65
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.verticalCenterOffset: 1
+                            labelText: "代理服务器端口"
+
+                        }
+
+                        MLineEdit1 {
+                            id: proxyServerPort
+                            textInputText: qmlCtrl.proxyServerPort
+                            readOnly:!usingProxySw.checked
+                            textInput.validator: RegExpValidator { regExp: /^([1-9]|[1-9]\d {1, 3}|[1-5]\d {4}|6[0-4]\d {3}|65[0-4]\d {2}|655[0-2]\d|6553[0-5])$/ }
+                            x: 420
+                            y: 25
+                        }
+                        anchors.leftMargin: 0
+                        anchors.rightMargin: 0
+                    }
+                }
+            }
+        }
+
+        MbuttonBlue {
+            x: 281
+            y: 442
+            text: "应用"
+            onClicked: {
+                qmlCtrl.enableProxy = usingProxySw.checked
+                qmlCtrl.proxyServerAddr = proxyServerAddr.textInputText
+                qmlCtrl.proxyServerPort = proxyServerPort.textInputText
+                qmlCtrl.updateProxySetting()
+            }
+
+        }
+        anchors.topMargin: 0
+        anchors.leftMargin: 0
+        anchors.rightMargin: 0
+    }
+
+    Rectangle {
+        id: audioSetting
+        x: -11
+        y: -11
+//                visible: true
+        visible: nowIndex == 4 ? true : false
+        color: "#ffffff"
+        anchors.left: rectangle.right
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 0
+        anchors.rightMargin: 0
+        Flickable {
+            anchors.fill: parent
+            ScrollBar.vertical: ScrollBar {
+                width: 10
+                anchors.right: parent.right
+                anchors.rightMargin: 0
+                policy: ScrollBar.AlwaysOn
+            }
+            Rectangle {
+                id: rectangle3
+                x: 0
+                y: 0
+                width: 712
+                height: 853
+                color: "#00070303"
+
+
+                //                    property QStringList myStringList: ["Item 1", "Item 2", "Item 3"]
+
+                Rectangle {
+                    id: rectangle1
+                    height: 300
+
+                    color: "#00363636"
+                    radius: 30
+                    border.color: "#40a7e3"
+                    border.width: 2
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.top: itemAudioDevice.bottom
+                    anchors.topMargin: 10
+                    anchors.rightMargin: 10
+                    anchors.leftMargin: 10
+
+                    ListView {
+                        id: devicelistView
+                        x: 10
+                        clip:true
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        anchors.bottomMargin: 20
+                        anchors.rightMargin: 20
+                        anchors.leftMargin: 20
+                        anchors.topMargin: 20
+                        model: qmlCtrl.getAudioDeviceList()
+                        delegate: audioDeviceDelegate
+                        focus: true;
+                        currentIndex: -1
+                    }
+                }
+
+                Item {
+                    id:itemAudioDevice
+                    x: 10
+                    y: 0
+                    height: 100
+
+
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.rightMargin: 0
+                    MLabelBlack {
+                        id: labelAudio
+                        width: 135
+                        height: 50
+
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        labelText: "当前音频输入设备"
+                    }
+
+                    MLabel {
+                        id: mLabelAudioDevice
+                        anchors.top: labelAudio.bottom
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.topMargin: 20
+                        labelText: qmlCtrl.getAudioDeviceName()
+                    }
+
+
+                    anchors.leftMargin: 0
+                }
+
+            }
+            contentWidth: parent.width
+            contentHeight: rectangle2.height
+            interactive: true
+        }
+
+        MbuttonBlue {
+            x: 281
+            y: 442
+            text: "应用"
+            onClicked: {
+                qmlCtrl.setAudioDevice(audioListIndex)
+                mLabelAudioDevice.labelText = qmlCtrl.getAudioDeviceName()
+            }
+        }
+
+        Component {
+            id: audioDeviceDelegate
+            Item {
+                id: wrapperAudio
+                width: devicelistView.width
+                height: 50
+                MouseArea {
+                    anchors.fill: parent;
+                    onClicked: {
+                        wrapperAudio.ListView.view.currentIndex = index;
+                        //                        qmlCtrl.setAudioDevice(index)
+                        audioListIndex = index
+                    }
+                }
+                Row {
+                    id: row
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    anchors.rightMargin: 0
+                    anchors.verticalCenter: parent.verticalCenter
+                    spacing: 10
+                    Rectangle {
+                        id:deviceeRectangle
+                        width: parent.width/2
+                        anchors.left: parent.left
+                        anchors.leftMargin: 10
+                        MLabel2 {
+                            labelText: modelData
+                            labelHorizontalAlignment: Text.AlignLeft
+                            anchors.fill: parent ; anchors.leftMargin: 20;labelColor: index === devicelistView.currentIndex ? "#40a7e3" : "#979797"}
+                    }
+                }
+            }
+        }
+        anchors.leftMargin: 0
+        anchors.topMargin: 0
+    }
+
+    Rectangle {
+        id: sysSetting
+        x: -11
+        y: -11
+        visible: nowIndex == 5 ? true : false
+        color: "#ffffff"
+        anchors.left: rectangle.right
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.topMargin: 0
+        Flickable {
+            anchors.fill: parent
+            contentWidth: parent.width
+            contentHeight: rectangle2.height
+            Rectangle {
+                x: 0
+                y: 0
+                width: 712
+                height: 853
+                color: "#00070303"
+                Item {
+                    id: item5
+                    height: 100
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    MLabelBlack {
+                        id:reloginlabel
+                        width: 135
+                        height: 65
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.left: parent.left
+                        anchors.leftMargin: 65
+                        labelText: "重新登录"
+                        anchors.verticalCenterOffset: 1
+                    }
+
+                    MbuttonBlue {
+                        id: mbuttonBlue1
+                        anchors.verticalCenter: parent.verticalCenter
+                        anchors.left: reloginlabel.right
+                        anchors.leftMargin: 50
+                        onClicked: {
+                            qmlCtrl.sendReloginSingle()
+                        }
+                    }
+
+                    anchors.rightMargin: 0
+                    anchors.leftMargin: 0
+                }
+
+
+            }
+            interactive: true
+            ScrollBar.vertical: ScrollBar {
+                width: 10
+                anchors.right: parent.right
+                policy: ScrollBar.AlwaysOn
+                anchors.rightMargin: 0
+            }
+        }
+
+        MbuttonBlue {
+            x: 281
+            y: 442
+            text: "应用"
+            onClicked: {
+                qmlCtrl.setAudioDevice(audioListIndex)
+                mLabelAudioDevice.labelText = qmlCtrl.getAudioDeviceName()
+            }
+        }
+
+
+        anchors.rightMargin: 0
+        anchors.leftMargin: 0
+        anchors.bottomMargin: 0
+    }
+
+    Rectangle {
+        id: apiSetting
+        x: 1021
+        y: -3
+        visible: true
+        //        visible: nowIndex == 3 ? true : false
+        color: "#ffffff"
+        anchors.left: rectangle.right
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.rightMargin: 0
+        anchors.leftMargin: 0
+        anchors.bottomMargin: 0
+        anchors.topMargin: 0
+        Flickable {
+            anchors.fill: parent
+            contentHeight: rectangle2.height
+            contentWidth: parent.width
+            ScrollBar.vertical: ScrollBar {
+                width: 10
+                anchors.right: parent.right
+                anchors.rightMargin: 0
+                policy: ScrollBar.AlwaysOn
+            }
+            Rectangle {
+                x: 0
+                y: 0
+                width: 712
+                height: 853
+                color: "#00070303"
+                Column {
+                    anchors.fill: parent
+                    Item {
+                        height: 100
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.rightMargin: 0
+                        anchors.leftMargin: 0
+                        MLabelBlack {
+                            x: 126
+                            width: 135
+                            height: 65
+                            anchors.verticalCenter: parent.verticalCenter
+                            labelText: "启用AI助理"
+                            anchors.verticalCenterOffset: 1
+                        }
+
+                        PowerSwitch {
+                            id:aienableSW
+                            x: 420
+                            y: 25
+                            width: 99
+                            height: 58
+                            checked: qmlCtrl.enableProxy
+                        }
+                    }
+
+                    Item {
+                        id: item8
+                        height: 100
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.rightMargin: 0
+                        anchors.leftMargin: 0
+                        MLabelBlack {
+                            x: 126
+                            width: 135
+                            height: 65
+                            anchors.verticalCenter: parent.verticalCenter
+                            labelText: "百度 TTS&STT API Key"
+                            anchors.verticalCenterOffset: 1
+                        }
+
+                        MLineEdit1 {
+                            x: 420
+                            anchors.verticalCenter: parent.verticalCenter
+                            textInputText: qmlCtrl.proxyServerAddr
+                            readOnly: !aienableSW.checked
+                            textInput.validator: RegExpValidator {
+                                regExp: /^[a-zA-Z0-9]*$/
+                            }
+                        }
+                    }
+
+                    Item {
+                        id: item7
+                        height: 100
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.rightMargin: 0
+                        anchors.leftMargin: 0
+                        MLabelBlack {
+                            x: 126
+                            width: 135
+                            height: 65
+                            anchors.verticalCenter: parent.verticalCenter
+                            labelText: "百度 TTS&STT API Secret Key"
+                            anchors.verticalCenterOffset: 1
+                        }
+
+                        MLineEdit1 {
+                            x: 420
+                            anchors.verticalCenter: parent.verticalCenter
+                            textInputText: qmlCtrl.proxyServerPort
+                            readOnly: !aienableSW.checked
+                            textInput.validator: RegExpValidator {
+                                regExp: /^[a-zA-Z0-9]*$/
+                            }
+                        }
+                    }
+
+                    Item {
+                        height: 100
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.rightMargin: 0
+                        anchors.leftMargin: 0
+                        MLabelBlack {
+                            x: 126
+                            width: 135
+                            height: 65
+                            anchors.verticalCenter: parent.verticalCenter
+                            labelText: "启用ChatGPT助理"
+                            anchors.verticalCenterOffset: 1
+                        }
+
+                        PowerSwitch {
+                            id:chatGPTenableSW
+                            x: 420
+                            y: 25
+                            width: 99
+                            height: 58
+                            checked: qmlCtrl.enableProxy
+                        }
+                    }
+
+                    Item {
+//                        id: item8
+                        height: 100
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.rightMargin: 0
+                        anchors.leftMargin: 0
+                        MLabelBlack {
+                            x: 126
+                            width: 135
+                            height: 65
+                            anchors.verticalCenter: parent.verticalCenter
+                            labelText: "百度 TTS&STT API Secret Key"
+                            anchors.verticalCenterOffset: 1
+                        }
+
+                        MLineEdit1 {
+                            x: 420
+                            anchors.verticalCenter: parent.verticalCenter
+                            textInputText: qmlCtrl.proxyServerPort
+                            readOnly: !aienableSW.checked
+                            textInput.validator: RegExpValidator {
+                                regExp: /^[a-zA-Z0-9]*$/
+                            }
+                        }
+                    }
+                }
+            }
+            interactive: true
+        }
+
+        MbuttonBlue {
+            x: 281
+            y: 442
+            text: "应用"
+            onClicked: {
+                    qmlCtrl.enableProxy = usingProxySw.checked
+                    qmlCtrl.proxyServerAddr = proxyServerAddr.textInputText
+                    qmlCtrl.proxyServerPort = proxyServerPort.textInputText
+                    qmlCtrl.updateProxySetting()
+                }
+        }
+    }
+}

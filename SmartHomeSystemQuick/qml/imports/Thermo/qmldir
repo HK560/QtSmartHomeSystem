@@ -1,0 +1,7 @@
+# NOTE: This file exists purely for qmlscene compatibility.
+# It's not used by Qt Quick Ultralite at any stage.
+singleton Rooms 1.0 Rooms.qml
+singleton ColorStyle 1.0 ColorStyle.qml
+singleton Units 1.0 Units.qml
+singleton Theme 1.0 Theme.qml
+Room 1.0 Room.qml
